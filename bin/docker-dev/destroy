@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-docker container rm untitled_application_dev
-docker image rm untitled_application_dev
+docker container rm augusta_planner_dev
+docker image rm augusta_planner_dev
