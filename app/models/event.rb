@@ -1,15 +1,15 @@
-class Client < ApplicationRecord
+class Event < ApplicationRecord
   # 🚅 add concerns above.
 
   # 🚅 add attribute accessors above.
 
-  belongs_to :team
+  belongs_to :agreement
   belongs_to :creator, class_name: "Membership"
   # 🚅 add belongs_to associations above.
 
-  has_many :agreements, dependent: :destroy, enable_cable_ready_updates: false
   # 🚅 add has_many associations above.
 
+  has_one :team, through: :agreement
   # 🚅 add has_one associations above.
 
   # 🚅 add scopes above.

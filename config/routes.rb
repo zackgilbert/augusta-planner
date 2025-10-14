@@ -74,7 +74,9 @@ Rails.application.routes.draw do
         end
 
         resources :clients do
-          resources :agreements
+          resources :agreements do
+            resources :events
+          end
         end
       end
     end

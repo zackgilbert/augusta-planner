@@ -24,6 +24,7 @@ components:
     <%= automatic_components_for Scaffolding::CompletelyConcrete::TangibleThing unless scaffolding_things_disabled? %>
     <%= automatic_components_for Client %>
     <%= automatic_components_for Agreement %>
+    <%= automatic_components_for Event %>
     <%# 🚅 super scaffolding will insert new components above this line. %>
   parameters:
     id:
@@ -60,4 +61,5 @@ paths:
   <%= automatic_paths_for Scaffolding::CompletelyConcrete::TangibleThing, Scaffolding::AbsolutelyAbstract::CreativeConcept unless scaffolding_things_disabled? %>
   <%= automatic_paths_for Client, Team %>
   <%= automatic_paths_for Agreement, Client %>
+  <%= automatic_paths_for Event, Agreement %>
   <%# 🚅 super scaffolding will insert new paths above this line. %>
