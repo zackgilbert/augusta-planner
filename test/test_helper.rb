@@ -31,9 +31,6 @@ else
   puts "If you'd like to use Knapsack Pro make sure that you've set the environment variable KNAPSACK_PRO_CI_NODE_INDEX".yellow
 end
 
-require "sidekiq/testing"
-Sidekiq::Testing.inline!
-
 ENV["MINITEST_REPORTERS_REPORTS_DIR"] = "test/reports#{ENV["TEST_ENV_NUMBER"] || ""}"
 require "minitest/reporters"
 

@@ -36,7 +36,7 @@ gem "cssbundling-rails"
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-gem "redis", "~> 5.4.0"
+# gem "redis", "~> 5.4.0"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -152,7 +152,7 @@ gem "rqrcode"
 gem "avo", ">= 3.1.7"
 
 # Background processing
-gem "sidekiq"
+# gem "sidekiq"
 
 # Protect the API routes via CORS
 gem "rack-cors"
@@ -262,3 +262,9 @@ gem "active_hash"
 # that you run into a merge conflict in the future.
 
 # 🚅 super scaffolding will insert new oauth providers above this line.
+
+gem "solid_queue", "~> 1.2"
+
+gem "mission_control-jobs", "~> 1.1"
+
+gem "solid_cable", "~> 3.0"

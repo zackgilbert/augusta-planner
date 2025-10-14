@@ -32,6 +32,10 @@ module AugustaPlanner
     config.i18n.default_locale = config.i18n.available_locales.first
     config.i18n.fallbacks = [:en]
 
+    # This changes where the mission control basic authentication is handled:
+    config.mission_control.jobs.base_controller_class = "MissionControlController"
+    config.mission_control.jobs.http_basic_auth_enabled = true
+
     BulletTrain::Api.set_configuration(self)
   end
 end

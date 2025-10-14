@@ -97,7 +97,7 @@ Rails.application.configure do
   config.hosts << /[a-z0-9-]+\.ngrok-free\.app/
 
   config.action_mailer.delivery_method = :letter_opener
-  config.active_job.queue_adapter = :sidekiq
+  config.active_job.queue_adapter = :solid_queue
 
   # Raises error for missing translations
   # Don't disable this. Localization is a big part of Bullet Train and you want hard errors when something goes wrong.

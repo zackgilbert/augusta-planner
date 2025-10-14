@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
+  mount MissionControl::Jobs::Engine, at: "/jobs"
   # See `config/routes/*.rb` to customize these configurations.
   draw "concerns"
   draw "devise"
-  draw "sidekiq"
   draw "avo"
 
   # `collection_actions` is automatically super scaffolded to your routes file when creating certain objects.
