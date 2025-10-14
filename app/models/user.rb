@@ -19,5 +19,9 @@ class User < ApplicationRecord
 
   # 🚅 add delegations above.
 
+  def staff?
+    teams.any?(&:staff?)
+  end
+
   # 🚅 add methods above.
 end
