@@ -1,13 +1,13 @@
 
 Via: https://claude.ai/chat/0dfbff29-48bd-4c15-aa52-9b353cbeacb3
 
-# 1. Client - 
+# 1. Client - 2025-10-14
 rails generate super_scaffold Client Team \
   creator_id:super_select{class_name=Membership} \
   business_name:text_field \
   ein:text_field
 
-# 2. Agreement - 
+# 2. Agreement - 2025-10-14
 rails generate super_scaffold Agreement Client,Team \
   creator_id:super_select{class_name=Membership} \
   year:number_field \
