@@ -11,7 +11,7 @@ class Ability
 
       # STAFF TEAM PERMISSIONS
       # Staff members can access all teams and clients
-      if user.staff?
+      if user.is_staff?
         can :manage, Team
         can :manage, Client
         can :manage, Membership

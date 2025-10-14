@@ -20,8 +20,8 @@ class User < ApplicationRecord
 
   # 🚅 add delegations above.
 
-  def staff?
-    teams.any?(&:staff?)
+  def is_staff?
+    teams.any?(&:is_staff?)
   end
   # 🚅 add methods above.
 end

@@ -21,7 +21,7 @@ class Team < ApplicationRecord
 
   # 🚅 add delegations above.
 
-  def staff?
+  def is_staff?
     id.to_s == ENV["STAFF_TEAM_ID"]
   end
 
