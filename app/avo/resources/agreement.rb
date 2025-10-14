@@ -1,4 +1,4 @@
-class Avo::Resources::Client < Avo::BaseResource
+class Avo::Resources::Agreement < Avo::BaseResource
   # self.includes = []
   # self.attachments = []
   # self.search = {
@@ -7,9 +7,10 @@ class Avo::Resources::Client < Avo::BaseResource
 
   def fields
     field :id, as: :id
-    field :team, as: :belongs_to
+    field :client, as: :belongs_to
     field :creator, as: :belongs_to
-    field :business_name, as: :text
-    field :ein, as: :text
+    field :year, as: :number
+    field :status, as: :text
+    field :property_address, as: :textarea
   end
 end

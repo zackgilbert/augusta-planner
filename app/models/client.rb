@@ -7,6 +7,7 @@ class Client < ApplicationRecord
   belongs_to :creator, class_name: "Membership"
   # 🚅 add belongs_to associations above.
 
+  has_many :agreements, dependent: :destroy, enable_cable_ready_updates: false
   # 🚅 add has_many associations above.
 
   # 🚅 add has_one associations above.

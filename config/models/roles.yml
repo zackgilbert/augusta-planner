@@ -1,5 +1,6 @@
 default:
   models:
+    Agreement: read
     Client: read
     Team: read
     Membership:
@@ -29,6 +30,7 @@ admin:
     - admin
     - editor
   models:
+    Agreement: manage
     Client: manage
     Team: manage
     Membership: manage
