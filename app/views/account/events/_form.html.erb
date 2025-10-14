@@ -1,0 +1,21 @@
+<% cancel_path ||= event.persisted? ? [:account, event] : [:account, @agreement, :events] %>
+
+<%= form_with model: event, url: (event.persisted? ? [:account, event] : [:account, @agreement, :events]), class: 'form' do |form| %>
+  <%= render "shared/limits/form", form: form, cancel_path: cancel_path do %>
+    <%= render 'account/shared/forms/errors', form: form %>
+
+    <% with_field_settings form: form do %>
+      <%= render 'shared/fields/super_select', method: :creator_id, options: {autofocus: true}, html_options: {autofocus: true},
+        choices: @event.valid_creators.map { |membership| [membership.label_string, membership.id] } %>
+      <%= render 'shared/fields/super_select', method: :event_type %>
+      <%= render 'shared/fields/date_field', method: :event_date_on %>
+      <%= render 'shared/fields/number_field', method: :market_rate_amount %>
+      <%# 🚅 super scaffolding will insert new fields above this line. %>
+    <% end %>
+
+    <div class="buttons">
+      <%= form.submit (form.object.persisted? ? t('.buttons.update') : t('.buttons.create')), class: "button" %>
+      <%= link_to t('global.buttons.cancel'), cancel_path, class: "button-secondary" %>
+    </div>
+  <% end %>
+<% end %>

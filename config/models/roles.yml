@@ -1,5 +1,6 @@
 default:
   models:
+    Event: read
     Agreement: read
     Client: read
     Team: read
@@ -30,6 +31,7 @@ admin:
     - admin
     - editor
   models:
+    Event: manage
     Agreement: manage
     Client: manage
     Team: manage
