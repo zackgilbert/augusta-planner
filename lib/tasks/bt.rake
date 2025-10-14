@@ -21,21 +21,19 @@ namespace :bt do
     FileUtils.touch("tmp/gems/.keep")
 
     BulletTrain.linked_gems.each do |linked_gem|
-      begin
-        spec = Gem::Specification.find_by_name(linked_gem)
-        target = spec.gem_dir
-        gem_name = File.basename(target)
-        link_path = File.join("tmp/gems", gem_name)
-        puts "Linking '#{linked_gem}' to '#{link_path}'"
-        FileUtils.ln_s(target, link_path, force: true)
-      rescue Gem::MissingSpecError
-        puts "Warning: Could not find gem '#{linked_gem}'"
-      end
+      spec = Gem::Specification.find_by_name(linked_gem)
+      target = spec.gem_dir
+      gem_name = File.basename(target)
+      link_path = File.join("tmp/gems", gem_name)
+      puts "Linking '#{linked_gem}' to '#{link_path}'"
+      FileUtils.ln_s(target, link_path, force: true)
+    rescue Gem::MissingSpecError
+      puts "Warning: Could not find gem '#{linked_gem}'"
     end
-    
+
     puts "\nSymlinks created in tmp/gems/:"
     Dir.glob("tmp/gems/bullet_train*").sort.each do |link|
-      target = File.readlink(link).strip
+      File.readlink(link).strip
       puts "  #{File.basename(link)}"
     end
   end
