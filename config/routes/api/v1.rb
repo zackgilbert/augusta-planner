@@ -31,7 +31,9 @@ shallow do
         # 🚅 super scaffolding will insert new integration installations above this line.
       end
 
-      resources :clients
+      resources :clients do
+        resources :agreements
+      end
     end
   end
 end

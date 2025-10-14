@@ -32,6 +32,7 @@
       <% end %>
     <% end %>
 
+    <%= render 'account/agreements/index', agreements: @client.agreements, hide_back: true %>
     <%# 🚅 super scaffolding will insert new children above this line. %>
   <% end %>
 <% end %>

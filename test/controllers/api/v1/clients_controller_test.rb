@@ -29,10 +29,10 @@ class Api::V1::ClientsControllerTest < Api::Test
     # Fetch the client in question and prepare to compare it's attributes.
     client = Client.find(client_data["id"])
 
-    assert_equal_or_nil client_data['creator_id'], client.creator_id
-    assert_equal_or_nil client_data['business_name'], client.business_name
-    assert_equal_or_nil client_data['ein'], client.ein
-    assert_equal_or_nil client_data['property_address'], client.property_address
+    assert_equal_or_nil client_data["creator_id"], client.creator_id
+    assert_equal_or_nil client_data["business_name"], client.business_name
+    assert_equal_or_nil client_data["ein"], client.ein
+    assert_equal_or_nil client_data["property_address"], client.property_address
     # 🚅 super scaffolding will insert new fields above this line.
 
     assert_equal client_data["team_id"], client.team_id
@@ -91,9 +91,9 @@ class Api::V1::ClientsControllerTest < Api::Test
     put "/api/v1/clients/#{@client.id}", params: {
       access_token: access_token,
       client: {
-        business_name: 'Alternative String Value',
-        ein: 'Alternative String Value',
-        property_address: 'Alternative String Value',
+        business_name: "Alternative String Value",
+        ein: "Alternative String Value",
+        property_address: "Alternative String Value",
         # 🚅 super scaffolding will also insert new fields above this line.
       }
     }
@@ -105,9 +105,9 @@ class Api::V1::ClientsControllerTest < Api::Test
 
     # But we have to manually assert the value was properly updated.
     @client.reload
-    assert_equal @client.business_name, 'Alternative String Value'
-    assert_equal @client.ein, 'Alternative String Value'
-    assert_equal @client.property_address, 'Alternative String Value'
+    assert_equal @client.business_name, "Alternative String Value"
+    assert_equal @client.ein, "Alternative String Value"
+    assert_equal @client.property_address, "Alternative String Value"
     # 🚅 super scaffolding will additionally insert new fields above this line.
 
     # Also ensure we can't do that same action as another user.
