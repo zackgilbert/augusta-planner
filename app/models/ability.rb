@@ -9,6 +9,15 @@ class Ability
   def initialize(user)
     if user.present?
 
+      # STAFF TEAM PERMISSIONS
+      # Staff members can access all teams and clients
+      if user.is_staff?
+        can :manage, Team
+        can :manage, Client
+        can :manage, Membership
+        can :manage, Invitation
+      end
+
       # permit is a Bullet Train created "magic" method. It parses all the roles in `config/roles.yml` and automatically inserts the appropriate `can` method calls here
       permit user, through: :memberships, parent: :team
 

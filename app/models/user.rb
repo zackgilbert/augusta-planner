@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include Users::Base
   include Roles::User
+
   # 🚅 add concerns above.
 
   # 🚅 add belongs_to associations above.
@@ -19,5 +20,8 @@ class User < ApplicationRecord
 
   # 🚅 add delegations above.
 
+  def is_staff?
+    teams.any?(&:is_staff?)
+  end
   # 🚅 add methods above.
 end

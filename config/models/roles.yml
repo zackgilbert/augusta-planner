@@ -1,5 +1,8 @@
 default:
   models:
+    Event: read
+    Agreement: read
+    Client: read
     Team: read
     Membership:
       - read
@@ -28,6 +31,9 @@ admin:
     - admin
     - editor
   models:
+    Event: manage
+    Agreement: manage
+    Client: manage
     Team: manage
     Membership: manage
     Scaffolding::AbsolutelyAbstract::CreativeConcept: manage

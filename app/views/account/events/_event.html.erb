@@ -1,0 +1,28 @@
+<% agreement = @agreement || @agreement %>
+<% context ||= agreement %>
+<% collection ||= :events %>
+<% hide_actions ||= false %>
+<% hide_back ||= false %>
+
+<% with_attribute_settings object: event do %>
+  <tr data-id="<%= event.id %>" class="group">
+    <%= render "shared/tables/checkbox", object: event %>
+    <td><%= render 'shared/attributes/belongs_to', attribute: :creator, url: [:account, event] %></td>
+    <td><%= render 'shared/attributes/option', attribute: :event_type %></td>
+    <td><%= render 'shared/attributes/date', attribute: :event_date_on %></td>
+    <td><%= render 'shared/attributes/number', attribute: :market_rate_amount %></td>
+    <%# 🚅 super scaffolding will insert new fields above this line. %>
+    <td><%= render 'shared/attributes/date_and_time', attribute: :created_at %></td>
+    <td class="buttons">
+      <% unless hide_actions %>
+        <% if can? :edit, event %>
+          <%= link_to t('.buttons.shorthand.edit'), [:edit, :account, event], class: 'button-secondary button-smaller' %>
+        <% end %>
+        <% if can? :destroy, event %>
+          <%= button_to t('.buttons.shorthand.destroy'), [:account, event], method: :delete, data: { turbo_confirm: t('.buttons.confirmations.destroy', model_locales(event)) }, class: 'button-secondary button-smaller' %>
+        <% end %>
+        <%# 🚅 super scaffolding will insert new action model buttons above this line. %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

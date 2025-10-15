@@ -2,8 +2,11 @@
   <% p.content_for :title, t('.header', teams_possessive: possessive_string(@team.name)) %>
 
   <% p.content_for :body do %>
-    <%# 🚅 super scaffolding will insert new children above this line. %>
-    
-    <%= render 'account/scaffolding/absolutely_abstract/creative_concepts/index', creative_concepts: @team.scaffolding_absolutely_abstract_creative_concepts, hide_back: true unless scaffolding_things_disabled? %>
+    <% if current_user.is_staff? %>
+      <%= render 'account/clients/index', clients: @team.clients, hide_back: true %>
+    <% else %>
+      Show client's dashboard...
+    <% end %>
+    <%# 🚅 super scaffolding will insert new children above this line. %>    
   <% end %>
 <% end %>

@@ -1,28 +1,29 @@
-class Team < ApplicationRecord
-  include Teams::Base
-  include Webhooks::Outgoing::TeamSupport
-
+class Event < ApplicationRecord
   # 🚅 add concerns above.
 
+  # 🚅 add attribute accessors above.
+
+  belongs_to :agreement
+  belongs_to :creator, class_name: "Membership"
   # 🚅 add belongs_to associations above.
 
   # 🚅 add has_many associations above.
 
-  # 🚅 add oauth providers above.
-
-  has_one :client, dependent: :destroy
+  has_one :team, through: :agreement
   # 🚅 add has_one associations above.
 
   # 🚅 add scopes above.
 
+  validates :creator, scope: true
+  validates :event_type, presence: true
   # 🚅 add validations above.
 
   # 🚅 add callbacks above.
 
   # 🚅 add delegations above.
 
-  def is_staff?
-    id.to_s == ENV["STAFF_TEAM_ID"]
+  def valid_creators
+    team.memberships
   end
 
   # 🚅 add methods above.

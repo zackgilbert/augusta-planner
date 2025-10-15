@@ -5,6 +5,9 @@
     <%= render 'account/teams/menu_item' %>
     <%= render 'account/scaffolding/absolutely_abstract/creative_concepts/menu_item' unless scaffolding_things_disabled? %>
     <% # added by super scaffolding. %>
+    <% if current_user.is_staff? %>
+      <%= render 'account/clients/menu_item' %>
+    <% end %>
   <% end %>
 
   <% @last_menu_orientation = @menu_orientation %>
