@@ -6,11 +6,11 @@ class Team < ApplicationRecord
 
   # 🚅 add belongs_to associations above.
 
+  has_many :clients, dependent: :destroy, enable_cable_ready_updates: false
   # 🚅 add has_many associations above.
 
   # 🚅 add oauth providers above.
 
-  has_one :client, dependent: :destroy
   # 🚅 add has_one associations above.
 
   # 🚅 add scopes above.
