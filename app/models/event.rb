@@ -4,7 +4,7 @@ class Event < ApplicationRecord
   # 🚅 add attribute accessors above.
 
   belongs_to :agreement
-  belongs_to :creator, class_name: "Membership"
+  belongs_to :creator, class_name: "Membership", optional: true
   # 🚅 add belongs_to associations above.
 
   # 🚅 add has_many associations above.
@@ -14,7 +14,7 @@ class Event < ApplicationRecord
 
   # 🚅 add scopes above.
 
-  validates :creator, scope: true
+  validates :creator, scope: true, unless: :public_intake?
   validates :event_type, presence: true
   # 🚅 add validations above.
 
@@ -24,6 +24,10 @@ class Event < ApplicationRecord
 
   def valid_creators
     team.memberships
+  end
+
+  def public_intake?
+    creator_id.nil?
   end
 
   # 🚅 add methods above.

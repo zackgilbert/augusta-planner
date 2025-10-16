@@ -1,0 +1,51 @@
+<% content_for :title, "Step 3: Events - Augusta Planner Intake" %>
+
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8" data-controller="intake-events">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-8">
+      <img src="/logo.png" alt="Augusta Planner" class="h-20 mx-auto mb-4">
+      <h1 class="text-3xl font-bold text-gray-900">Augusta Rental Agreement Intake</h1>
+      <p class="mt-2 text-gray-600">Add your rental events and dates</p>
+    </div>
+
+    <%= render 'progress', current_step: 'events' %>
+
+    <div class="bg-white shadow-lg rounded-lg p-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-2">Step 3: Rental Events</h2>
+      <p class="text-sm text-gray-600 mb-6">Add up to 14 rental events with their dates and types.</p>
+      
+      <%= form_with model: @agreement, url: public_intake_step_path(step: 'events'), method: :patch, local: true, class: 'space-y-6' do |form| %>
+        <div data-intake-events-target="container" class="space-y-4">
+          <%= form.fields_for :events_attributes do |event_form| %>
+            <%= render 'event_fields', form: event_form %>
+          <% end %>
+        </div>
+
+        <div class="flex justify-center py-4" data-intake-events-target="addButtonContainer">
+          <button type="button" 
+                  data-action="click->intake-events#addEvent"
+                  class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add Another Event
+          </button>
+        </div>
+
+        <div class="pt-4 flex gap-3">
+          <%= link_to "Back", public_intake_step_path(step: 'property_owner'), class: "flex-1 flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors" %>
+          <%= form.submit "Submit Intake Form", class: "flex-1 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors", data: { disable_with: "Submitting..." } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<template data-intake-events-target="template">
+  <%= form_with model: Agreement.new, url: '#', local: true do |form| %>
+    <%= form.fields_for :events_attributes, Event.new, child_index: 'NEW_RECORD' do |event_form| %>
+      <%= render 'event_fields', form: event_form %>
+    <% end %>
+  <% end %>
+</template>
+

@@ -4,7 +4,7 @@ class Client < ApplicationRecord
   # 🚅 add attribute accessors above.
 
   belongs_to :team
-  belongs_to :creator, class_name: "Membership"
+  belongs_to :creator, class_name: "Membership", optional: true
   # 🚅 add belongs_to associations above.
 
   has_many :agreements, dependent: :destroy, enable_cable_ready_updates: false
@@ -14,8 +14,9 @@ class Client < ApplicationRecord
 
   # 🚅 add scopes above.
 
-  validates :creator, scope: true
+  validates :creator, scope: true, unless: :public_intake?
   validates :ein, presence: true
+  validates :business_name, presence: true
   # 🚅 add validations above.
 
   # 🚅 add callbacks above.
@@ -24,6 +25,10 @@ class Client < ApplicationRecord
 
   def valid_creators
     team.memberships
+  end
+
+  def public_intake?
+    creator_id.nil?
   end
 
   # 🚅 add methods above.

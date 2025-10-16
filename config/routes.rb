@@ -20,6 +20,12 @@ Rails.application.routes.draw do
     # The root `/` path is routed to `Public::HomeController#index` by default. You can set it
     # to whatever you want by doing something like this:
     # root to: "my_new_root_controller#index"
+
+    # Public intake form routes
+    get "intake", to: "intake#new", as: :public_intake
+    get "intake/:step", to: "intake#show", as: :public_intake_step
+    patch "intake/:step", to: "intake#update"
+    get "intake-complete", to: "intake#complete", as: :public_intake_complete
   end
 
   namespace :webhooks do
