@@ -25,7 +25,7 @@ class Ability
       can :manage, User, id: user.id
       can :read, User, id: user.collaborating_user_ids
       can :destroy, Membership, user_id: user.id
-      can :manage, Invitation, id: user.teams.map(&:invitations).flatten.map(&:id)
+      can :manage, Invitation, team_id: user.team_ids
 
       can :create, Team
 
