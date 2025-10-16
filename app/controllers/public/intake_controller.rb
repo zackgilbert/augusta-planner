@@ -53,9 +53,10 @@ class Public::IntakeController < Public::ApplicationController
       session[:intake_data][:agreement] = agreement_params.to_h
       redirect_to public_intake_step_path(step: "events")
     when "events"
-      # Save events to session
+      # Save events to session (using strong parameters)
       if params[:agreement] && params[:agreement][:events_attributes]
-        session[:intake_data][:events] = params[:agreement][:events_attributes].values.map(&:to_unsafe_h)
+        filtered_params = events_params[:events_attributes]
+        session[:intake_data][:events] = filtered_params.values.map(&:to_h) if filtered_params
       end
 
       # Create all the records
