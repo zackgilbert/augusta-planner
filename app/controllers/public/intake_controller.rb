@@ -126,11 +126,16 @@ class Public::IntakeController < Public::ApplicationController
       # Find or create client
       client_data = session[:intake_data][:client]
       @client = Client.find_or_initialize_by(ein: client_data["ein"])
-      @client.assign_attributes(
-        business_name: client_data["business_name"],
-        team: @staff_team
-      )
-      @client.save!
+
+      if @client.new_record?
+        # Only set these attributes for new clients
+        @client.assign_attributes(
+          business_name: client_data["business_name"],
+          team: @staff_team
+        )
+        @client.save!
+      end
+      # For existing clients, don't update their data to preserve existing relationships
 
       # Create agreement
       agreement_data = session[:intake_data][:agreement]
