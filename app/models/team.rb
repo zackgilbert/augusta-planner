@@ -22,7 +22,8 @@ class Team < ApplicationRecord
   # 🚅 add delegations above.
 
   def is_staff?
-    id.to_s == ENV["STAFF_TEAM_ID"]
+    staff_team_id = ENV.fetch("STAFF_TEAM_ID", nil)
+    staff_team_id.present? && id.to_s == staff_team_id
   end
 
   # 🚅 add methods above.

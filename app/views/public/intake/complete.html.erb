@@ -1,0 +1,54 @@
+<% content_for :title, "Thank You - Augusta Planner Intake" %>
+
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white shadow-lg rounded-lg p-8 text-center">
+      <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+        <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">Thank You!</h1>
+      <p class="text-lg text-gray-600 mb-6">Your intake form has been submitted successfully.</p>
+      
+      <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+        <h2 class="text-lg font-semibold text-green-900 mb-2">What happens next?</h2>
+        <ul class="text-sm text-green-800 text-left space-y-2">
+          <li class="flex items-start">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Our team will review your rental agreement information
+          </li>
+          <li class="flex items-start">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            We'll contact you at the property owner's email with next steps
+          </li>
+          <li class="flex items-start">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            You'll receive your finalized agreement within 2-3 business days
+          </li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <%= link_to "Return to Home", root_path, class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors" %>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <p class="text-sm text-gray-500">
+          Need help? Contact us at 
+          <a href="mailto:support@augustaplanner.com" class="text-green-600 hover:text-green-700 font-medium">
+            support@augustaplanner.com
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
