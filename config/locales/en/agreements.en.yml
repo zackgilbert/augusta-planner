@@ -56,6 +56,24 @@ en:
         heading: *property_address
         api_title: *property_address
         api_description: *property_address
+      property_bedrooms:
+        _: &property_bedrooms Property Bedrooms
+        label: *property_bedrooms
+        heading: *property_bedrooms
+        api_title: *property_bedrooms
+        api_description: *property_bedrooms
+      owner_name:
+        _: &owner_name Owner Name
+        label: *owner_name
+        heading: *owner_name
+        api_title: *owner_name
+        api_description: *owner_name
+      owner_email:
+        _: &owner_email Owner Email
+        label: *owner_email
+        heading: *owner_email
+        api_title: *owner_email
+        api_description: *owner_email
       # 🚅 super scaffolding will insert new fields above this line.
       created_at:
         _: &created_at Added
@@ -116,6 +134,9 @@ en:
         year: *year
         status: *status
         property_address: *property_address
+        property_bedrooms: *property_bedrooms
+        owner_name: *owner_name
+        owner_email: *owner_email
         # 🚅 super scaffolding will insert new activerecord attributes above this line.
         created_at: *created_at
         updated_at: *updated_at

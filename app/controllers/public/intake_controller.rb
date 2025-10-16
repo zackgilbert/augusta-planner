@@ -1,37 +1,38 @@
 class Public::IntakeController < Public::ApplicationController
-  before_action :load_intake_data
   before_action :ensure_staff_team
+  before_action :load_or_create_draft, only: [:show, :update]
 
-  STEPS = %w[renting_business property_owner events].freeze
+  STEPS = %w[business property events].freeze
 
   def new
-    redirect_to public_intake_step_path(step: "renting_business")
+    # Clear any previous draft session
+    session[:intake_draft_id] = nil
+    redirect_to public_intake_step_path(step: "business")
   end
 
   def show
     @step = params[:step]
 
     unless STEPS.include?(@step)
-      redirect_to public_intake_step_path(step: "renting_business") and return
+      redirect_to public_intake_step_path(step: "business")
+      return
     end
 
     case @step
-    when "renting_business"
-      @client = Client.new(session[:intake_data][:client] || {})
-    when "property_owner"
-      @agreement = Agreement.new(session[:intake_data][:agreement] || {})
-    when "events"
-      @agreement = Agreement.new(session[:intake_data][:agreement] || {})
-      # Pre-populate with at least one event
-      if @agreement.events.empty?
-        saved_events = session[:intake_data][:events] || []
-        if saved_events.empty?
-          @agreement.events.build
-        else
-          saved_events.each do |event_data|
-            @agreement.events.build(event_data)
-          end
-        end
+    when "business"
+      @client = @draft_client
+    when "property", "events"
+      @agreement = @draft_agreement
+      
+      # If no draft agreement exists (e.g., session was cleared), redirect to start
+      unless @agreement
+        redirect_to public_intake_path
+        return
+      end
+      
+      # Pre-populate with at least one event for events step
+      if @step == "events" && @agreement.events.empty?
+        @agreement.events.build
       end
     end
 
@@ -42,37 +43,95 @@ class Public::IntakeController < Public::ApplicationController
     @step = params[:step]
 
     unless STEPS.include?(@step)
-      redirect_to public_intake_step_path(step: "renting_business") and return
+      redirect_to public_intake_step_path(step: "business")
+      return
     end
 
-    case @step
-    when "renting_business"
-      session[:intake_data][:client] = client_params.to_h
-      redirect_to public_intake_step_path(step: "property_owner")
-    when "property_owner"
-      session[:intake_data][:agreement] = agreement_params.to_h
-      redirect_to public_intake_step_path(step: "events")
-    when "events"
-      # Save events to session (using strong parameters)
-      if params[:agreement] && params[:agreement][:events_attributes]
-        filtered_params = events_params[:events_attributes]
-        session[:intake_data][:events] = filtered_params.values.map(&:to_h) if filtered_params
-      end
+    # Determine if user clicked back button
+    going_back = params[:commit] == "Back" || params[:direction] == "back"
 
-      # Create all the records
-      if create_intake_records
-        # Clear session data
-        session[:intake_data] = nil
-        redirect_to public_intake_complete_path, notice: "Your intake form has been submitted successfully!"
-      else
-        @agreement = Agreement.new(session[:intake_data][:agreement] || {})
-        # Rebuild events from params
-        if params[:agreement] && params[:agreement][:events_attributes]
-          params[:agreement][:events_attributes].each do |_key, event_attrs|
-            @agreement.events.build(event_attrs) unless event_attrs[:_destroy] == "1"
+    case @step
+    when "business"
+      if params[:client].present? && !going_back
+        # Find or create client by EIN
+        ein = client_params[:ein]
+        existing_client = Client.find_by(ein: ein)
+        
+        if existing_client
+          # Use existing client, don't modify it
+          @draft_client = existing_client
+        else
+          # Create new client
+          @draft_client.assign_attributes(client_params)
+          unless @draft_client.save
+            @client = @draft_client
+            render "public/intake/business"
+            return
           end
         end
-        render "public/intake/events"
+        
+        # Find or create draft agreement
+        current_year = Time.current.year
+        @draft_agreement = @draft_client.agreements.find_or_initialize_by(year: current_year) do |agreement|
+          agreement.status = "intake_draft"
+        end
+        
+        # If agreement exists but is not a draft, reset it to draft for re-submission
+        if @draft_agreement.persisted? && !@draft_agreement.intake_draft?
+          @draft_agreement.status = "intake_draft"
+        end
+        
+        # Save the agreement if it's new or modified
+        unless @draft_agreement.save
+          @client = @draft_client
+          flash[:alert] = "Unable to create agreement: #{@draft_agreement.errors.full_messages.join(', ')}"
+          render "public/intake/business" and return
+        end
+        
+        session[:intake_draft_id] = @draft_agreement.id
+      end
+      
+      if going_back
+        redirect_to public_intake_path
+      else
+        redirect_to public_intake_step_path(step: "property")
+      end
+      
+    when "property"
+      if params[:agreement].present? && !going_back
+        @draft_agreement.assign_attributes(agreement_params)
+        unless @draft_agreement.save
+          @agreement = @draft_agreement
+          render "public/intake/property"
+          return
+        end
+      end
+      
+      if going_back
+        redirect_to public_intake_step_path(step: "business")
+      else
+        redirect_to public_intake_step_path(step: "events")
+      end
+      
+    when "events"
+      if going_back
+        redirect_to public_intake_step_path(step: "property")
+      else
+        # Update events and finalize
+        if params[:agreement].present?
+          @draft_agreement.assign_attributes(events_params)
+        end
+        
+        # Change status from draft to submitted
+        @draft_agreement.status = "pending_review"
+        
+        if @draft_agreement.save
+          # Keep session active so user can view what they submitted
+          redirect_to public_intake_complete_path, notice: "Your intake form has been submitted successfully!"
+        else
+          @agreement = @draft_agreement
+          render "public/intake/events"
+        end
       end
     end
   end
@@ -83,12 +142,14 @@ class Public::IntakeController < Public::ApplicationController
 
   private
 
-  def load_intake_data
-    session[:intake_data] ||= {
-      client: {},
-      agreement: {},
-      events: []
-    }
+  def load_or_create_draft
+    if session[:intake_draft_id].present?
+      @draft_agreement = Agreement.find_by(id: session[:intake_draft_id], status: "intake_draft")
+      @draft_client = @draft_agreement&.client
+    end
+    
+    # Create new draft client if none exists
+    @draft_client ||= Client.new(team: @staff_team)
   end
 
   def ensure_staff_team
@@ -109,62 +170,16 @@ class Public::IntakeController < Public::ApplicationController
   end
 
   def client_params
-    params.require(:client).permit(:business_name, :ein, :data)
+    params.require(:client).permit(:business_name, :ein)
   end
 
   def agreement_params
-    params.require(:agreement).permit(:owner_name, :owner_email, :property_address, :year)
+    params.require(:agreement).permit(:owner_name, :owner_email, :property_address, :property_bedrooms, :year)
   end
 
   def events_params
     params.require(:agreement).permit(
       events_attributes: [:id, :event_type, :event_date_on, :_destroy]
     )
-  end
-
-  def create_intake_records
-    ActiveRecord::Base.transaction do
-      # Find or create client
-      client_data = session[:intake_data][:client]
-      @client = Client.find_or_initialize_by(ein: client_data["ein"])
-
-      if @client.new_record?
-        # Only set these attributes for new clients
-        @client.assign_attributes(
-          business_name: client_data["business_name"],
-          team: @staff_team
-        )
-        @client.save!
-      end
-      # For existing clients, don't update their data to preserve existing relationships
-
-      # Create agreement
-      agreement_data = session[:intake_data][:agreement]
-      current_year = Time.current.year
-      @agreement = @client.agreements.create!(
-        property_address: agreement_data["property_address"],
-        year: agreement_data["year"] || current_year,
-        status: "draft",
-        owner_name: agreement_data["owner_name"],
-        owner_email: agreement_data["owner_email"]
-      )
-
-      # Create events
-      events_data = session[:intake_data][:events] || []
-      events_data.each do |event_attrs|
-        next if event_attrs["_destroy"] == "1" || event_attrs["_destroy"] == true
-        next if event_attrs["event_type"].blank?
-
-        @agreement.events.create!(
-          event_type: event_attrs["event_type"],
-          event_date_on: event_attrs["event_date_on"]
-        )
-      end
-
-      true
-    end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error "Intake form error: #{e.message}"
-    false
   end
 end

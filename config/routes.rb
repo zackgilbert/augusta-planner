@@ -23,9 +23,9 @@ Rails.application.routes.draw do
 
     # Public intake form routes
     get "intake", to: "intake#new", as: :public_intake
+    get "intake/complete", to: "intake#complete", as: :public_intake_complete
     get "intake/:step", to: "intake#show", as: :public_intake_step
     patch "intake/:step", to: "intake#update"
-    get "intake-complete", to: "intake#complete", as: :public_intake_complete
   end
 
   namespace :webhooks do
