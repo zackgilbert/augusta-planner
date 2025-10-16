@@ -9,7 +9,7 @@ puts "🌱 Generating global seeds."
 # Check whether the Zapier app has been deployed.
 zapier_app_id = begin
   JSON.parse(File.read("zapier/.zapierapprc")).dig("id")
-rescue
+rescue Errno::ENOENT, JSON::ParserError
   nil
 end
 
