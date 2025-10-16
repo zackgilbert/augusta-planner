@@ -92,7 +92,7 @@ class Public::IntakeController < Public::ApplicationController
 
   def ensure_staff_team
     # All public intake clients belong to the staff team
-    staff_team_id = ENV["STAFF_TEAM_ID"]
+    staff_team_id = ENV.fetch("STAFF_TEAM_ID", nil)
 
     if staff_team_id.present?
       @staff_team = Team.find(staff_team_id)
