@@ -23,13 +23,13 @@ class Public::IntakeController < Public::ApplicationController
       @client = @draft_client
     when "property", "events"
       @agreement = @draft_agreement
-      
+
       # If no draft agreement exists (e.g., session was cleared), redirect to start
       unless @agreement
         redirect_to public_intake_path
         return
       end
-      
+
       # Pre-populate with at least one event for events step
       if @step == "events" && @agreement.events.empty?
         @agreement.events.build
@@ -56,7 +56,7 @@ class Public::IntakeController < Public::ApplicationController
         # Find or create client by EIN
         ein = client_params[:ein]
         existing_client = Client.find_by(ein: ein)
-        
+
         if existing_client
           # Use existing client, don't modify it
           @draft_client = existing_client
@@ -69,34 +69,34 @@ class Public::IntakeController < Public::ApplicationController
             return
           end
         end
-        
+
         # Find or create draft agreement
         current_year = Time.current.year
         @draft_agreement = @draft_client.agreements.find_or_initialize_by(year: current_year) do |agreement|
           agreement.status = "intake_draft"
         end
-        
+
         # If agreement exists but is not a draft, reset it to draft for re-submission
         if @draft_agreement.persisted? && !@draft_agreement.intake_draft?
           @draft_agreement.status = "intake_draft"
         end
-        
+
         # Save the agreement if it's new or modified
         unless @draft_agreement.save
           @client = @draft_client
-          flash[:alert] = "Unable to create agreement: #{@draft_agreement.errors.full_messages.join(', ')}"
+          flash[:alert] = "Unable to create agreement: #{@draft_agreement.errors.full_messages.join(", ")}"
           render "public/intake/business" and return
         end
-        
+
         session[:intake_draft_id] = @draft_agreement.id
       end
-      
+
       if going_back
         redirect_to public_intake_path
       else
         redirect_to public_intake_step_path(step: "property")
       end
-      
+
     when "property"
       if params[:agreement].present? && !going_back
         @draft_agreement.assign_attributes(agreement_params)
@@ -106,13 +106,13 @@ class Public::IntakeController < Public::ApplicationController
           return
         end
       end
-      
+
       if going_back
         redirect_to public_intake_step_path(step: "business")
       else
         redirect_to public_intake_step_path(step: "events")
       end
-      
+
     when "events"
       if going_back
         redirect_to public_intake_step_path(step: "property")
@@ -121,10 +121,10 @@ class Public::IntakeController < Public::ApplicationController
         if params[:agreement].present?
           @draft_agreement.assign_attributes(events_params)
         end
-        
+
         # Change status from draft to submitted
         @draft_agreement.status = "pending_review"
-        
+
         if @draft_agreement.save
           # Keep session active so user can view what they submitted
           redirect_to public_intake_complete_path, notice: "Your intake form has been submitted successfully!"
@@ -147,7 +147,7 @@ class Public::IntakeController < Public::ApplicationController
       @draft_agreement = Agreement.find_by(id: session[:intake_draft_id], status: "intake_draft")
       @draft_client = @draft_agreement&.client
     end
-    
+
     # Create new draft client if none exists
     @draft_client ||= Client.new(team: @staff_team)
   end
