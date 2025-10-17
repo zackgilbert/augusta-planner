@@ -2,7 +2,7 @@ class Agreement < ApplicationRecord
   # 🚅 add concerns above.
 
   # 🚅 add attribute accessors above.
-  store_accessor :data, :owner_name, :owner_email
+  store_accessor :data, :owner_name, :owner_email, :property_bedrooms
 
   belongs_to :client
   belongs_to :creator, class_name: "Membership", optional: true
@@ -19,7 +19,7 @@ class Agreement < ApplicationRecord
 
   validates :creator, scope: true, unless: :public_intake?
   validates :year, presence: true
-  validates :property_address, presence: true
+  validates :property_address, presence: true, unless: :intake_draft?
   # 🚅 add validations above.
 
   # 🚅 add callbacks above.
@@ -32,6 +32,10 @@ class Agreement < ApplicationRecord
 
   def public_intake?
     creator_id.nil?
+  end
+
+  def intake_draft?
+    status == "intake_draft"
   end
 
   # 🚅 add methods above.

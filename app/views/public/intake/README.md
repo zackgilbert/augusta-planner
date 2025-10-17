@@ -5,18 +5,18 @@ This multi-step intake form allows new or existing clients to create rental agre
 ## Overview
 
 The form consists of three steps:
-1. **Renting Business** - Client business information (name, EIN, business address)
-2. **Property Owner Info** - Property owner details (name, email, property address)
+1. **Business** - Client business information (name, EIN, business address)
+2. **Property** - Property owner details (name, email, property address)
 3. **Events** - Up to 14 rental events with dates and event types
 
 ## Routes
 
 - `GET /intake` - Redirects to step 1
-- `GET /intake/renting_business` - Step 1: Renting Business
-- `GET /intake/property_owner` - Step 2: Property Owner Info
+- `GET /intake/business` - Step 1: Business
+- `GET /intake/property` - Step 2: Property
 - `GET /intake/events` - Step 3: Events
 - `PATCH /intake/:step` - Submit each step
-- `GET /intake-complete` - Success page
+- `GET /intake/complete` - Success page
 
 ## Features
 
